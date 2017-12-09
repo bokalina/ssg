@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SSG</title>
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+    <h1>Static Site Generator</h1>
+    <p>Enter basic info for Your web page and click on <strong>"Generate"</strong>.</p>
+    <p>Title:
+        <input type="text" id="inputTitle" style="width: 35%;" value="demo" />
+    </p>
+    <p>Image:
+        <input type="text" id="inputImage" style="width: 35%;" value="http://via.placeholder.com/350x150" />
+    </p>
+    <p>Description:
+        <input type="text" id="inputDescription" style="width: 35%;" value="Put description of the web page here ..." />
+    </p>
+    <p>Backgound color:
+        <input type="color" id="background" style="width: 35%;" />
+    </p>
+    <p>Font color:
+        <input type="color" id="inputColor" style="width: 35%;" />
+    </p>
+    <p>Font type:
+        <input type="text" id="inputFont" style="width: 35%;" />
+    </p>
+    <button onclick="generate()">Generate</button>
+    <div>
+        <p>Generated source code:</p>
+        <textarea style="width: 70%; height: 400px;" id="result" disabled>The generated source code will be displayed here!</textarea>
+    </div>
+    <button onclick="download()">Download</button>
+    <script type="text/javascript">
+    const inputTitle = document.getElementById("inputTitle");
+    const inputImage = document.getElementById("inputImage");
+    const inputDescription = document.getElementById("inputDescription");
+    const color = document.getElementById("background");
+    const inputColor = document.getElementById("inputColor");
+    const inputFont = document.getElementById("inputFont");
+    const result = document.getElementById("result");
+
+    function download() {
+        let downloadLink = document.createElement('a');
+        downloadLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(result.value));
+        let title = inputTitle.value;
+        if (!title) {
+            title = "demo";
+        }
+        downloadLink.setAttribute('download', title + ".html");
+        downloadLink.style.display = 'none';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+
+    function generate() {
+        const title = inputTitle.value;
+        const imageSrc = inputImage.value;
+        const description = inputDescription.value;
+        const color = background.value;
+        const fontColor = inputColor.value;
+        const font = inputFont.value;
+        let template = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <style>
+            body{
+                background:$COLOR$;
+                color:$FONTCOLOR$;
+                font-family:$FONT$
+            }
+            </style>
+            <title>$TITLE$</title>
+          </head>
+        <body>
+          <div>
+            <h1>$HEADING$</h1>
+            <img src="$IMAGE$">
+            <p>$DESCRIPTION$</p>
+          <div>
+        </body>
+        </html>`
+        template = template.replace("$TITLE$", title);
+        template = template.replace("$HEADING$", title);
+        template = template.replace("$IMAGE$", imageSrc);
+        template = template.replace("$DESCRIPTION$", description);
+        template = template.replace("$COLOR$", color);
+        template = template.replace("$FONTCOLOR$", fontColor);
+        template = template.replace("$FONT$", font);
+        result.innerHTML = template;
+    }
+    </script>
+</body>
+
+</html>
